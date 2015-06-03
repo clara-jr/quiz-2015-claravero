@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' type='text/css' href='/stylesheets/style.css' />
-    <link rel='stylesheet' type='text/css' media='only screen and (min-width: 530px) and (min-devide-width: 481px)' href='/stylesheets/wide.css' />
-    <link rel='stylesheet' type='text/css' media='only screen and (max-width: 480px)' href='/stylesheets/smartphone.css' />
-    <link rel="shortcut icon" href="http://www.saferinternet.org/image/image_gallery?uuid=b243b830-e3fd-49b9-ad2c-43b2ff073db8&groupId=10137&t=1359909134797" type="image/x-icon">
+    <meta chatset="utf-8">
+    <title>Mi cuenta</title>
   </head>
   <body>
     <p>Editar información de la cuenta:</p>
-
     <form method="post" action="/user/<%= user.id %>?_method=put" >      
       <% include _form.ejs %>
     </form>
-
     <form method="post" action="/user/<%= user.id %>?_method=delete">
-        <button type="submit" onClick="return confirm('Borrar cuenta: <%= user.username %>');">
+        <button type="submit" onClick="return confirm('Confirmación para borrar cuenta: <%= user.username %>');">
         Eliminar cuenta
         </button>
     </form>

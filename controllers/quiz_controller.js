@@ -39,16 +39,44 @@ exports.index = function(req, res) {
     options.where = {UserId: req.user.id}
   }  
   if (req.query.search===undefined) {
-    models.Quiz.findAll().then(
+    models.Quiz.findAll(options).then(
       function(quizes) {
-        res.render('quizes/index.ejs', {quizes: quizes, errors: []});
+        models.Fav.findAll().then(function(f){
+        for(index in quizes) {
+          for(indexx in f) {
+            if (req.session && req.session.user && (f[indexx].UserId === req.session.user.id) && (f[indexx].QuizId === quizes[index].id)) {
+              favs[index] = true;
+              break;
+            }
+            else {
+              favs[index] = false;
+            }
+          }
+        }
+        res.render('quizes/index.ejs', {quizes: quizes, fav:false, favs:favs, models:models, errors: []});
+        })
       }
     ).catch(function(error){next(error)});
   }
   else {
-    models.Quiz.findAll({where:["pregunta like ?", "%"+req.query.search.replace(/\s/g,"%")+"%"], order: 'pregunta ASC'}).then(function(quizes) {
-      res.render('quizes/index.ejs', { quizes: quizes, errors: []});
-    }).catch(function(error) { next(error);})
+    models.Quiz.findAll({where:["pregunta like ?", "%"+req.query.search.replace(/\s/g,"%")+"%"], order: 'pregunta ASC'}).then(
+      function(quizes) {
+        models.Fav.findAll().then(function(f){
+        for(index in quizes) {
+          for(indexx in f) {
+            if (req.session && req.session.user && (f[indexx].UserId === req.session.user.id) && (f[indexx].QuizId === quizes[index].id)) {
+              favs[index] = true;
+              break;
+            }
+            else {
+              favs[index] = false;
+            }
+          }
+        }
+        res.render('quizes/index.ejs', { quizes: quizes, fav:false, favs:favs, models:models, errors: []});
+        })
+      }
+    ).catch(function(error) { next(error);})
   }
 };
 
@@ -137,7 +165,7 @@ exports.update = function(req, res) {
 // DELETE /quizes/:id
 exports.destroy = function(req, res) {
   req.quiz.destroy().then( function() {
-    res.redirect('/quizes');
+    res.redirect(req.get('referer'));
   }).catch(function(error){next(error)});
 };
 

@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Quiz</title>
-    <link rel='stylesheet' type='text/css' href='/stylesheets/style.css' />
-    <link rel='stylesheet' type='text/css' media='only screen and (min-width: 530px) and (min-devide-width: 481px)' href='/stylesheets/wide.css' />
-    <link rel='stylesheet' type='text/css' media='only screen and (max-width: 480px)' href='/stylesheets/smartphone.css' />
-    <link rel="shortcut icon" href="http://www.saferinternet.org/image/image_gallery?uuid=b243b830-e3fd-49b9-ad2c-43b2ff073db8&groupId=10137&t=1359909134797" type="image/x-icon">
+    <meta charset="utf-8">
+    <title>Estadísticas</title>
     <!-- Custom styles -->
     <style>
         ul {margin:0; padding:0;}
@@ -14,8 +11,11 @@
   </head>
   <body>
     <ul>
+      <% if (session.user) { %>
+      <li>Favoritos: <%= favoritos %> </li>
+      <% } %>
       <li>Número de preguntas: <%= preguntas %></li>
-      <li>Número de comentarios: <%= comentarios %></li>
+      <li>Número de comentarios publicados: <%= comentarios %></li>
       <li>Número medio de comentarios por pregunta: <%= media.toFixed(2) %></li>
       <li>Número de preguntas sin comentarios: <%= sinComments %> </li>
       <li>Número de preguntas con comentarios: <%= conComments %> </li>

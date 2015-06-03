@@ -7,6 +7,7 @@ var commentController = require('../controllers/comment_controller');
 var sessionController = require('../controllers/session_controller');
 var userController = require('../controllers/user_controller');
 var statisticsController = require('../controllers/statistics_controller');
+var favouritesController = require('../controllers/favourites_controller');
 
 // Página de entrada (home page)
 router.get('/', function(req, res) {
@@ -49,5 +50,10 @@ router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',
 
 // Definición de rutas de estadísticas
 router.get('/quizes/statistics', statisticsController.statistics);
+
+//definición de las rutas de los favoritos
+router.get('/user/:userId(\\d+)/favourites',                   sessionController.loginRequired, favouritesController.show);
+router.put('/user/:userId(\\d+)/favourites/:quizId(\\d+)',     sessionController.loginRequired, favouritesController.fav);
+router.delete('/user/:userId(\\d+)/favourites/:quizId(\\d+)',  sessionController.loginRequired, favouritesController.unfav);
 
 module.exports = router;

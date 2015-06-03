@@ -43,10 +43,15 @@ var Quiz = sequelize.import(quiz_path);
 var comment_path = path.join(__dirname,'comment');
 var Comment = sequelize.import(comment_path);
 
-// Importar definicion de la tabla Comment
+// Importar definicion de la tabla User
 var user_path = path.join(__dirname,'user');
 var User = sequelize.import(user_path);
 
+// Importar definicion de la tabla Favourites
+var fav_path = path.join(__dirname,'favourites');
+var Fav = sequelize.import(fav_path);
+
+// los comentarios pertenecen a una pregunta
 Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment);
 
@@ -54,29 +59,35 @@ Quiz.hasMany(Comment);
 Quiz.belongsTo(User);
 User.hasMany(Quiz);
 
-// exportar tablas
-exports.Quiz = Quiz; 
-exports.Comment = Comment; 
-exports.User = User;
+// asociación de usuarios con sus preguntas favoritas
+User.belongsToMany(Quiz, {through: 'Fav'});
+Quiz.belongsToMany(User, {through: 'Fav'});
 
-// sequelize.sync() inicializa tabla de preguntas en DB
+// exportar tablas
+exports.Quiz = Quiz;
+exports.Comment = Comment;
+exports.User = User;
+exports.Fav = Fav;
+
+// sequelize.sync() carga e inicializa tabla de preguntas en BD
 sequelize.sync().then(function() {
-  // then(..) ejecuta el manejador una vez creada la tabla
-  User.count().then(function(count){
-    if(count === 0) {   // la tabla se inicializa solo si está vacía
-      User.bulkCreate( 
-        [ {username: 'admin',   password: '1234', isAdmin: true},
-          {username: 'pepe',   password: '5678'} // el valor por defecto de isAdmin es 'false'
+  // success(..) ejecuta el manejador una vez creada la tabla
+  User.count().then(function(count) {
+    if (count === 0) {  // la tabla se inicializa solo si está vacía
+      User.bulkCreate(
+        [ {username: 'admin',   password: '1234',   isAdmin: true},
+          {username: 'pepe',    password: '5678'}
         ]
       ).then(function(){
-        console.log('Base de datos (tabla user) inicializada');
-        Quiz.count().then(function(count){
-          if(count === 0) {   // la tabla se inicializa solo si está vacía
-            Quiz.bulkCreate( 
-              [ {pregunta: 'Capital de Italia',   respuesta: 'Roma', UserId: 2}, // estos quizes pertenecen al usuario pepe (2)
-                {pregunta: 'Capital de Portugal', respuesta: 'Lisboa', UserId: 2}
+        console.log('Tabla de usuarios inicializada');
+        Quiz.count().then(function(count) {
+          if (count === 0) { // la tabla se inicializa solo si está vacía
+            Quiz.bulkCreate(
+              [ {pregunta: 'Capital de Italia',       respuesta: 'Roma',            UserId: '2',  image:null},
+                {pregunta: 'Capital de Portugal',     respuesta: 'Lisboa',          UserId: '2',  image:null},
+                {pregunta: 'Quién descubrió América', respuesta: 'Cristóbal Colón', UserId: '2',  image:null}
               ]
-            ).then(function(){console.log('Base de datos (tabla quiz) inicializada')});
+            ).then(function() {console.log('Base de datos inicializada')});
           };
         });
       });
