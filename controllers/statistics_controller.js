@@ -6,7 +6,7 @@ exports.statistics = function(req, res){
     var numPregs = quizes.length;
     models.Comment.findAll().then(function(comments){
       var numComentarios = comments.length;
-      var numComentariospublis = comments.length;
+      var numComentariospublis = 0;
       var numPregsTot = 0;
       var media = 0;
       var sinComments = 0;
@@ -28,9 +28,7 @@ exports.statistics = function(req, res){
           }else{ // si es el primer comentario con ese QuizId, pongo a 1 array[QuizId]
             array[comments[i].QuizId] = 1;
           }
-        }
-        else {
-          numComentariospublis--;
+          numComentariospublis++;
         }
       }
       for(var i=1; i<=numPregsTot; i++){ // recorro la tabla preguntas

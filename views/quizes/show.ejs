@@ -8,22 +8,25 @@
     <link rel="shortcut icon" href="http://www.saferinternet.org/image/image_gallery?uuid=b243b830-e3fd-49b9-ad2c-43b2ff073db8&groupId=10137&t=1359909134797" type="image/x-icon">
   </head>
   <body>
-    <form method="get" action="/quizes/<%= quiz.id %>/answer">        
-      <%= quiz.pregunta %> <p>
-      <input type="text" name="respuesta" value="Respuesta"/>
-      <input type="submit" value="Enviar">
-    </form>
-
-    <p><a href="/quizes/<%= quiz.id %>/comments/new"><button>Nuevo comentario</button></a></p>
-
-    <p><strong>Comentarios:</strong></p>
-    <%for(index in quiz.Comments){%>
-      <%if(quiz.Comments[index].publicado){%>
-        <p>- <%=quiz.Comments[index].texto%></p>
-      <%} else if(session.user && (session.user.isAdmin || (session.user && quiz.UserId === session.user.id))){%>
-          <p>- <%=quiz.Comments[index].texto%>
-          <a href="/quizes/<%= quiz.id %>/comments/<%=quiz.Comments[index].id%>/publish"><button>Publicar</button></a></p>
+    <%if (quiz.image){%>
+      <p><img class="quiz_img" src="/media/<%= quiz.image %>"></p>
       <%}%>
-    <%}%>
+      <form method="get" action="/quizes/<%= quiz.id %>/answer">        
+        <%= quiz.pregunta %> <p>
+        <input type="text" name="respuesta" value="Respuesta"/>
+        <input type="submit" value="Enviar">
+      </form>
+
+      <p><a href="/quizes/<%= quiz.id %>/comments/new"><button>Nuevo comentario</button></a></p>
+
+      <p><strong>Comentarios:</strong></p>
+      <%for(index in quiz.Comments){%>
+        <%if(quiz.Comments[index].publicado){%>
+          <p>- <%=quiz.Comments[index].texto%></p>
+        <%} else if(session.user && (session.user.isAdmin || (session.user && quiz.UserId === session.user.id))){%>
+            <p>- <%=quiz.Comments[index].texto%>
+            <a href="/quizes/<%= quiz.id %>/comments/<%=quiz.Comments[index].id%>/publish"><button>Publicar</button></a></p>
+        <%}%>
+      <%}%>
   </body>
 </html>
