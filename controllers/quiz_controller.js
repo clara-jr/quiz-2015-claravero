@@ -32,7 +32,12 @@ exports.load = function(req, res, next, quizId) {
 };
 
 // GET /quizes
-exports.index = function(req, res) {
+// GET /users/:userId/quizes
+exports.index = function(req, res) {  
+  var options = {};
+  if(req.user){
+    options.where = {UserId: req.user.id}
+  }  
   if (req.query.search===undefined) {
     models.Quiz.findAll().then(
       function(quizes) {
